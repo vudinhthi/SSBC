@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2027
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SSBC_Mix", "SSBC_Mix\SSBC_Mix.csproj", "{060EFD26-E52A-4AB9-9514-30780CF5E058}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SSBC_Data", "SSBC_Data\SSBC_Data.csproj", "{D5F7515A-1DBC-4FA0-977A-3FF9BECE9FF0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{060EFD26-E52A-4AB9-9514-30780CF5E058}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{060EFD26-E52A-4AB9-9514-30780CF5E058}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{060EFD26-E52A-4AB9-9514-30780CF5E058}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{060EFD26-E52A-4AB9-9514-30780CF5E058}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5F7515A-1DBC-4FA0-977A-3FF9BECE9FF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5F7515A-1DBC-4FA0-977A-3FF9BECE9FF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5F7515A-1DBC-4FA0-977A-3FF9BECE9FF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5F7515A-1DBC-4FA0-977A-3FF9BECE9FF0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2DD16CED-191F-4CD2-853A-063C25A8D88B}
+	EndGlobalSection
+EndGlobal
