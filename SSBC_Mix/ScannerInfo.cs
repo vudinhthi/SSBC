@@ -1,4 +1,6 @@
-﻿namespace SSBC_Mix
+﻿using System;
+
+namespace SSBC_Mix
 {
     public class ScannerInfo
     {
@@ -11,7 +13,7 @@
         public string MaterialName { get; set; }
         public string MaterialType { get; set; }
         public decimal ScaleWeight { get; set; }
-        public System.DateTime ScaleDate { get; set; }
+        public DateTime ScaleDate { get; set; }
 
         //===========
         //public string WinlineCo { get; set; }

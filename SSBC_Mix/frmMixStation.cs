@@ -1,5 +1,6 @@
 ﻿using DevExpress.XtraReports.UI;
 using SerialPortListener.Serial;
+using SSBC_Data.SQLext;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -55,7 +56,7 @@ namespace SSBC_Mix
 
             mySerialSettings.BaudRate = int.Parse(MyReader.GetValue("BaudRate", typeof(string)).ToString());
             mySerialSettings.DataBits = 8;
-            mySerialSettings.Parity   = 0;
+            mySerialSettings.Parity = 0;
             mySerialSettings.StopBits = StopBits.One;
 
             _spManager.NewSerialDataRecieved += new EventHandler<SerialDataEventArgs>(_spManager_NewSerialDataRecieved);
@@ -116,6 +117,32 @@ namespace SSBC_Mix
 
         private ScannerInfo _ScannerInfo;
         private SSBC_Data.SourceContext dbContext;
+        private string TrackType = string.Empty;
+        //Grid
+        private int rowIndex     = 0;
+        private int columnIndex  = 0;
+
+        private decimal WeightInput = 0;
+        private int VoucherAfter    = 0;
+        private int SleepTime       = 0;
+
+        private string notifi = string.Empty;
+
+        #region Pagging
+        int pageNumber              = 1;
+        int numRecord               = 15;
+
+        List<vSSBC_MixTracks> LoadRecord(int page, int recordNum)
+        {
+            List<vSSBC_MixTracks> result = new List<vSSBC_MixTracks>();
+            //Skip
+            result = dbContext.vSSBC_MixTracks.OrderByDescending(x => x.ScaleDate).Skip(page* recordNum).Take(numRecord).ToList();
+            //Take
+
+            return result;
+        }
+        #endregion
+
 
         /// <summary>
         /// frmMixStation_Load
@@ -158,7 +185,8 @@ namespace SSBC_Mix
         /// <param name="e"></param>
         private void TimerTick(Object obj, ElapsedEventArgs e)
         {
-            Console.WriteLine("Exiting");
+            MessageBox.Show("Exiting");
+            WriteLog("Exiting");
             Environment.Exit(0);
         }
 
@@ -188,10 +216,7 @@ namespace SSBC_Mix
             _listener.UnHookKeyboard();
         }
 
-        private decimal WeightInput = 0;
-        private int VoucherAfter = 0;
-
-        private int SleepTime = 0;
+        
 
         /// <summary>
         /// txtBarcode_KeyDown
@@ -330,9 +355,6 @@ namespace SSBC_Mix
                     MessageBox.Show("End with Error : " + _ScannerInfo.Msg);
                     WriteLog("End with Error : " + _ScannerInfo.Msg);
                 }
-
-                //====
-
                 // var ItemsSource = (List<SSBC_Mix.Data.SQLView.ViewStocks>)gvData.DataSource;
                 txtBarcode.Focus();
             }
@@ -343,17 +365,17 @@ namespace SSBC_Mix
         /// </summary>
         private void ReSetControl()
         {
-            txtBarcode.Text = string.Empty;
-            //txtBarcodeFull.Text = string.Empty;
-            //txtTrackNo.Text = string.Empty;
-
+            //txtBarcodeFull.Text  = string.Empty;
+            //txtTrackNo.Text      = string.Empty;
             // txtWinlineCode.Text = string.Empty;
-            txtItemName.Text       = string.Empty;
-            txtColorCode.Text      = string.Empty;
-            txtColor.Text          = string.Empty;
-            txtMatCode.Text        = string.Empty;
-            txtMatName.Text        = string.Empty;
-            txtWeight.Text         = "0";
+
+            txtBarcode.Text   = string.Empty;
+            txtItemName.Text  = string.Empty;
+            txtColorCode.Text = string.Empty;
+            txtColor.Text     = string.Empty;
+            txtMatCode.Text   = string.Empty;
+            txtMatName.Text   = string.Empty;
+            txtWeight.Text    = 0.ToString();
         }
 
         private SSBC_Data.Extend.LabelTemplate MixLabel(string _LabelName, string _Barcode, decimal _ScaleWeight)
@@ -361,18 +383,18 @@ namespace SSBC_Mix
             return new SSBC_Data.Extend.LabelTemplate
             {
                 //WinlineCode = _ScannerInfo.WinlineCo,
-                ItemName      = _ScannerInfo.WinlineName,
-                ColorCode     = _ScannerInfo.ColorCode,
-                ColorName     = _ScannerInfo.ColorName,
-                MaterialCo    = _ScannerInfo.MaterialCo,
-                MaterialName  = _ScannerInfo.MaterialName,
-                MaterialType  = _ScannerInfo.MaterialType,
-                ScaleWeight   = _ScaleWeight,
-                ScaleDate     = _ScannerInfo.ScaleDate,
-                LabelName     = _LabelName,
-                Barcode       = _Barcode,
-                BatchNo       = _ScannerInfo.BatchNo.ToString(),
-                MachineInfo   = _ScannerInfo.MachineInfo
+                ItemName = _ScannerInfo.WinlineName,
+                ColorCode = _ScannerInfo.ColorCode,
+                ColorName = _ScannerInfo.ColorName,
+                MaterialCo = _ScannerInfo.MaterialCo,
+                MaterialName = _ScannerInfo.MaterialName,
+                MaterialType = _ScannerInfo.MaterialType,
+                ScaleWeight = _ScaleWeight,
+                ScaleDate = _ScannerInfo.ScaleDate,
+                LabelName = _LabelName,
+                Barcode = _Barcode,
+                BatchNo = _ScannerInfo.BatchNo.ToString(),
+                MachineInfo = _ScannerInfo.MachineInfo
             };
         }
 
@@ -383,10 +405,9 @@ namespace SSBC_Mix
         /// <param name="e"></param>
         private void frmMixStation_FormClosing(object sender, FormClosingEventArgs e)
         {
+            MessageBox.Show("Đóng Phần Mềm Mix");
             WriteLog("Đóng Phần Mềm Mix");
         }
-
-        private string TrackType = string.Empty;
 
         #region Button Click
 
@@ -457,7 +478,16 @@ namespace SSBC_Mix
         /// <param name="e"></param>
         private void btnCopy_Click(object sender, EventArgs e)
         {
-            ACTIVECOPY();
+            try
+            {
+                ACTIVECOPY();
+                MessageBox.Show("Đã coppy table thành công!");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Đã xảy ra lỗi trong quá trình coppy table !");
+                ex.ToString();
+            }
         }
 
         /// <summary>
@@ -474,11 +504,9 @@ namespace SSBC_Mix
         {
             _spManager.StopListening();
             //TrackType = "Lookup";
-
             //lblStatus.Text = "Lịch Sử Dữ Liệu";
 
             tabControl1.SelectedTab = TabPageHistory;
-
             switch (TrackType)
             {
                 case "MIX":
@@ -511,7 +539,6 @@ namespace SSBC_Mix
             }
 
             //var lst = dbContext.vSSBC_MixTrackinDays.OrderByDescending(x => x.ScaleDate).ToList();
-
             dgvData.Columns[2].Width = 130;
         }
 
@@ -530,6 +557,7 @@ namespace SSBC_Mix
                 item.btnPrint = "IN TEM";
             }
             dgvData.DataSource = lst;
+            //dgvData.DataSource = LoadRecord(pageNumber,numRecord);//DataSource Dùng Phân Trang
             dbContext.Dispose();
         }
 
@@ -628,7 +656,7 @@ namespace SSBC_Mix
         private void LOOKUPRED()
         {
             var dbContext = new SSBC_Data.SourceContext();
-            var lst       = dbContext.vSSBC_RedTracks.Take(100).OrderByDescending(x => x.ScaleDate).AsQueryable().ToList();
+            var lst = dbContext.vSSBC_RedTracks.Take(100).OrderByDescending(x => x.ScaleDate).AsQueryable().ToList();
             foreach (var item in lst)
             {
                 item.btnDel = "XÓA";
@@ -1044,24 +1072,24 @@ namespace SSBC_Mix
 
                 ListItem.Add(new SSBC_Data.Extend.LabelTemplate
                 {
-                    ItemName     = _ScannerInfo.WinlineName,
-                    ColorCode    = _ScannerInfo.ColorCode,
-                    ColorName    = _ScannerInfo.ColorName,
-                    MaterialCo   = _ScannerInfo.MaterialCo,
+                    ItemName = _ScannerInfo.WinlineName,
+                    ColorCode = _ScannerInfo.ColorCode,
+                    ColorName = _ScannerInfo.ColorName,
+                    MaterialCo = _ScannerInfo.MaterialCo,
                     MaterialName = _ScannerInfo.MaterialName,
                     MaterialType = _ScannerInfo.MaterialType == "CP" ? "CP" : "RE",
-                    ScaleWeight  = _ScannerInfo.ScaleWeight,
-                    ScaleDate    = _ScannerInfo.ScaleDate,
-                    LabelName    = _ScannerInfo.MaterialType == "CP" ? "ĐÙN - WAREHOUSE" : "XAY - WAREHOUSE",
-                    Barcode      = _ScannerInfo.TrackNo,
-                    BatchNo      = _ScannerInfo.BatchNo.ToString(),
-                    MachineInfo  = string.Empty
+                    ScaleWeight = _ScannerInfo.ScaleWeight,
+                    ScaleDate = _ScannerInfo.ScaleDate,
+                    LabelName = _ScannerInfo.MaterialType == "CP" ? "ĐÙN - WAREHOUSE" : "XAY - WAREHOUSE",
+                    Barcode = _ScannerInfo.TrackNo,
+                    BatchNo = _ScannerInfo.BatchNo.ToString(),
+                    MachineInfo = string.Empty
                 }
            );
 
-                var MyReader   = new System.Configuration.AppSettingsReader();
+                var MyReader = new System.Configuration.AppSettingsReader();
                 string Printer = string.Empty;
-                Printer        = MyReader.GetValue("Printer_White", typeof(string)).ToString();
+                Printer = MyReader.GetValue("Printer_White", typeof(string)).ToString();
 
                 Report.rptLabelBarcode rep = new Report.rptLabelBarcode();
                 rep.CreateDocument(false);
@@ -1088,24 +1116,24 @@ namespace SSBC_Mix
 
                 ListItem.Add(new SSBC_Data.Extend.LabelTemplate
                 {
-                    ItemName     = _ScannerInfo.WinlineName,
-                    ColorCode    = _ScannerInfo.ColorCode,
-                    ColorName    = _ScannerInfo.ColorName,
-                    MaterialCo   = _ScannerInfo.MaterialCo,
+                    ItemName = _ScannerInfo.WinlineName,
+                    ColorCode = _ScannerInfo.ColorCode,
+                    ColorName = _ScannerInfo.ColorName,
+                    MaterialCo = _ScannerInfo.MaterialCo,
                     MaterialName = _ScannerInfo.MaterialName,
                     MaterialType = "CP",
-                    ScaleWeight  = _ScannerInfo.ScaleWeight,
-                    ScaleDate    = _ScannerInfo.ScaleDate,
-                    LabelName    = "COMPOUND (ĐÙN)",
-                    Barcode      = _ScannerInfo.TrackNo,
-                    BatchNo      = _ScannerInfo.BatchNo.ToString(),
-                    MachineInfo  = string.Empty
+                    ScaleWeight = _ScannerInfo.ScaleWeight,
+                    ScaleDate = _ScannerInfo.ScaleDate,
+                    LabelName = "COMPOUND (ĐÙN)",
+                    Barcode = _ScannerInfo.TrackNo,
+                    BatchNo = _ScannerInfo.BatchNo.ToString(),
+                    MachineInfo = string.Empty
                 }
              );
 
-                var MyReader   = new System.Configuration.AppSettingsReader();
+                var MyReader = new System.Configuration.AppSettingsReader();
                 string Printer = string.Empty;
-                Printer        = MyReader.GetValue("Printer_Yellow", typeof(string)).ToString();
+                Printer = MyReader.GetValue("Printer_Yellow", typeof(string)).ToString();
 
                 Report.rptLabelBarcode rep = new Report.rptLabelBarcode();
                 rep.CreateDocument(false);
@@ -1133,20 +1161,20 @@ namespace SSBC_Mix
                 ListItem.Add(
                 new SSBC_Data.Extend.LabelTemplate
                 {
-                    ColorCode    = _ScannerInfo.ColorCode,
-                    ColorName    = _ScannerInfo.ColorName,
-                    MaterialCo   = _ScannerInfo.MaterialCo,
+                    ColorCode = _ScannerInfo.ColorCode,
+                    ColorName = _ScannerInfo.ColorName,
+                    MaterialCo = _ScannerInfo.MaterialCo,
                     MaterialName = _ScannerInfo.MaterialCo,
                     MaterialType = _ScannerInfo.MaterialType,
-                    ScaleWeight  = _ScannerInfo.ScaleWeight,
-                    ScaleDate    = _ScannerInfo.ScaleDate,
-                    LabelName    = "CRUSH (XAY)",
-                    Barcode      = _ScannerInfo.TrackNo
+                    ScaleWeight = _ScannerInfo.ScaleWeight,
+                    ScaleDate = _ScannerInfo.ScaleDate,
+                    LabelName = "CRUSH (XAY)",
+                    Barcode = _ScannerInfo.TrackNo
                 });
 
-                var MyReader   = new System.Configuration.AppSettingsReader();
+                var MyReader = new System.Configuration.AppSettingsReader();
                 string Printer = string.Empty;
-                Printer        = _ScannerInfo.MaterialType == "CP" ? MyReader.GetValue("Printer_Yellow", typeof(string)).ToString() : MyReader.GetValue("Printer_White", typeof(string)).ToString();
+                Printer = _ScannerInfo.MaterialType == "CP" ? MyReader.GetValue("Printer_Yellow", typeof(string)).ToString() : MyReader.GetValue("Printer_White", typeof(string)).ToString();
 
                 Report.rptLabelBarcode01 rep = new Report.rptLabelBarcode01();
                 rep.CreateDocument(false);
@@ -1174,24 +1202,24 @@ namespace SSBC_Mix
                 ListItem.Add(
                 new SSBC_Data.Extend.LabelTemplate
                 {
-                    ColorCode    = _ScannerInfo.ColorCode,
-                    ColorName    = _ScannerInfo.ColorName,
-                    MaterialCo   = _ScannerInfo.MaterialCo,
+                    ColorCode = _ScannerInfo.ColorCode,
+                    ColorName = _ScannerInfo.ColorName,
+                    MaterialCo = _ScannerInfo.MaterialCo,
                     MaterialName = _ScannerInfo.MaterialCo,
                     MaterialType = _ScannerInfo.MaterialType,
-                    ScaleWeight  = _ScannerInfo.ScaleWeight,
-                    ScaleDate    = _ScannerInfo.ScaleDate,
-                    LabelName    = _ScannerInfo.TrackNo.Split('-')[1] == "RE" ? "RED (CHẤM ĐEN)" : "HÀNG PHẾ (Hỗn Hợp)",
-                    Barcode      = _ScannerInfo.TrackNo,
+                    ScaleWeight = _ScannerInfo.ScaleWeight,
+                    ScaleDate = _ScannerInfo.ScaleDate,
+                    LabelName = _ScannerInfo.TrackNo.Split('-')[1] == "RE" ? "RED (CHẤM ĐEN)" : "HÀNG PHẾ (Hỗn Hợp)",
+                    Barcode = _ScannerInfo.TrackNo,
                 });
 
-                var MyReader                 = new System.Configuration.AppSettingsReader();
-                string Printer               = string.Empty;
-                Printer                      = MyReader.GetValue("Printer_Yellow", typeof(string)).ToString();
+                var MyReader = new System.Configuration.AppSettingsReader();
+                string Printer = string.Empty;
+                Printer = MyReader.GetValue("Printer_Yellow", typeof(string)).ToString();
                 Report.rptLabelBarcode01 rep = new Report.rptLabelBarcode01();
                 rep.CreateDocument(false);
                 rep.Load(ListItem);
-                rep.PrinterName              = Printer;
+                rep.PrinterName = Printer;
                 rep.Print();
                 rep.Dispose();
                 //rep.ShowPreview();
@@ -1209,7 +1237,7 @@ namespace SSBC_Mix
         {
             try
             {
-                var ListItem     = new List<SSBC_Data.Extend.LabelTemplate>();
+                var ListItem = new List<SSBC_Data.Extend.LabelTemplate>();
                 string LabelName = string.Empty;
 
                 if (_ScannerInfo.fBarcode.Substring(0, 2) == "MI")
@@ -1235,17 +1263,17 @@ namespace SSBC_Mix
                 new SSBC_Data.Extend.LabelTemplate
                 {
                     //winlineCode = _ScannerInfo.WinlineCo,
-                    ItemName      = _ScannerInfo.WinlineName,
-                    ColorCode     = _ScannerInfo.ColorCode,
-                    ColorName     = _ScannerInfo.ColorName,
-                    MaterialCo    = _ScannerInfo.MaterialCo,
-                    MaterialName  = _ScannerInfo.MaterialCo,
-                    MaterialType  = _ScannerInfo.MaterialType,
-                    ScaleWeight   = _ScannerInfo.ScaleWeight,
-                    ScaleDate     = _ScannerInfo.ScaleDate,
-                    LabelName     = LabelName,
-                    Barcode       = _ScannerInfo.TrackNo + "-" + _ScannerInfo.fBarcode.Substring(_ScannerInfo.TrackNo.Length + 1, 2),
-                    BatchNo       = _ScannerInfo.BatchNo.ToString()
+                    ItemName = _ScannerInfo.WinlineName,
+                    ColorCode = _ScannerInfo.ColorCode,
+                    ColorName = _ScannerInfo.ColorName,
+                    MaterialCo = _ScannerInfo.MaterialCo,
+                    MaterialName = _ScannerInfo.MaterialCo,
+                    MaterialType = _ScannerInfo.MaterialType,
+                    ScaleWeight = _ScannerInfo.ScaleWeight,
+                    ScaleDate = _ScannerInfo.ScaleDate,
+                    LabelName = LabelName,
+                    Barcode = _ScannerInfo.TrackNo + "-" + _ScannerInfo.fBarcode.Substring(_ScannerInfo.TrackNo.Length + 1, 2),
+                    BatchNo = _ScannerInfo.BatchNo.ToString()
                 });
 
                 var MyReader = new System.Configuration.AppSettingsReader();
@@ -1268,11 +1296,6 @@ namespace SSBC_Mix
             }
         }
 
-        //Grid
-        private int rowindex = 0;
-
-        private int columnindex = 0;
-
         /// <summary>
         /// dgvData_CellDoubleClick
         /// </summary>
@@ -1283,76 +1306,76 @@ namespace SSBC_Mix
             lblStatus.Text = "TRỘN NHỰA";
             //tabControl1.SelectedTab = TabPageInput;
 
-            string sLabelName       = string.Empty,
-                   sBarcode         = string.Empty,
-                   sMaterialType    = string.Empty,
-                   sMachineInfo     = string.Empty;
+            string sLabelName    = string.Empty,
+                   sBarcode      = string.Empty,
+                   sMaterialType = string.Empty,
+                   sMachineInfo  = string.Empty;
 
-            rowindex    = dgvData.CurrentCell.RowIndex;
-            columnindex = dgvData.CurrentCell.ColumnIndex;
+            rowIndex = dgvData.CurrentCell.RowIndex;
+            columnIndex = dgvData.CurrentCell.ColumnIndex;
 
-            dgvData.Rows[rowindex].Cells[columnindex].Value.ToString();
+            dgvData.Rows[rowIndex].Cells[columnIndex].Value.ToString();
 
-            if (dgvData.Rows[rowindex].Cells[columnindex].Value.ToString() == "IN TEM")
+            if (dgvData.Rows[rowIndex].Cells[columnIndex].Value.ToString() == "IN TEM")
             {
                 var ListItem = new List<SSBC_Data.Extend.LabelTemplate>();
                 var Label = new SSBC_Data.Extend.LabelTemplate();
 
-                sBarcode = dgvData.Rows[rowindex].Cells[9].Value.ToString();
+                sBarcode = dgvData.Rows[rowIndex].Cells[9].Value.ToString();
                 switch (TrackType)
                 {
                     case "MIX":
-                        sLabelName    = "MIXED (TRỘN)";
-                        sBarcode      = sBarcode + "-MI";
+                        sLabelName = "MIXED (TRỘN)";
+                        sBarcode = sBarcode + "-MI";
                         sMaterialType = "RE";
-                        sMachineInfo  = dgvData.Rows[rowindex].Cells[12].Value.ToString();
+                        sMachineInfo = dgvData.Rows[rowIndex].Cells[12].Value.ToString();
                         break;
 
                     case "WHS":
-                        sLabelName    = sBarcode.Substring(0, 2) == "CP" ? "ĐÙN - WAREHOUSE" : "XAY - WAREHOUSE";
+                        sLabelName = sBarcode.Substring(0, 2) == "CP" ? "ĐÙN - WAREHOUSE" : "XAY - WAREHOUSE";
                         sMaterialType = sBarcode.Substring(0, 2) == "CP" ? "CP" : "RE";
                         break;
 
                     case "RETURN":
-                        sLabelName    = "Thu hồi Nhựa";
+                        sLabelName = "Thu hồi Nhựa";
                         sMaterialType = "RE";
                         break;
 
                     case "RETURN-OUT":
-                        sLabelName    = "Xuất Nhựa Thu Hồi";
+                        sLabelName = "Xuất Nhựa Thu Hồi";
                         sMaterialType = "RE";
                         break;
 
                     case "CRUSH":
-                        sLabelName    = "CRUSH (XAY)";
+                        sLabelName = "CRUSH (XAY)";
                         sMaterialType = "RE";
                         break;
 
                     case "COMPOUND":
-                        sLabelName    = "COMPOUND (ĐÙN)";
+                        sLabelName = "COMPOUND (ĐÙN)";
                         sMaterialType = "CP";
-                        sMachineInfo  = dgvData.Rows[rowindex].Cells[12].Value.ToString();
+                        sMachineInfo = dgvData.Rows[rowIndex].Cells[12].Value.ToString();
                         break;
 
                     case "RED":
-                        sLabelName    = "RED (CHẤM ĐEN)";
+                        sLabelName = "RED (CHẤM ĐEN)";
                         sMaterialType = "RE";
                         break;
                 }
 
                 ListItem.Add(new SSBC_Data.Extend.LabelTemplate
                 {
-                    ItemName     = dgvData.Rows[rowindex].Cells[3].Value.ToString(),
-                    ColorCode    = Decimal.Parse(dgvData.Rows[rowindex].Cells[4].Value.ToString()),
-                    ColorName    = dgvData.Rows[rowindex].Cells[5].Value.ToString(),
-                    MaterialCo   = dgvData.Rows[rowindex].Cells[6].Value.ToString(),
-                    MaterialName = dgvData.Rows[rowindex].Cells[7].Value.ToString(),
+                    ItemName     = dgvData.Rows[rowIndex].Cells[3].Value.ToString(),
+                    ColorCode    = Decimal.Parse(dgvData.Rows[rowIndex].Cells[4].Value.ToString()),
+                    ColorName    = dgvData.Rows[rowIndex].Cells[5].Value.ToString(),
+                    MaterialCo   = dgvData.Rows[rowIndex].Cells[6].Value.ToString(),
+                    MaterialName = dgvData.Rows[rowIndex].Cells[7].Value.ToString(),
                     MaterialType = sMaterialType,
-                    ScaleWeight  = decimal.Parse(dgvData.Rows[rowindex].Cells[8].Value.ToString()),
-                    ScaleDate    = DateTime.Parse(dgvData.Rows[rowindex].Cells[2].Value.ToString()),
+                    ScaleWeight  = decimal.Parse(dgvData.Rows[rowIndex].Cells[8].Value.ToString()),
+                    ScaleDate    = DateTime.Parse(dgvData.Rows[rowIndex].Cells[2].Value.ToString()),
                     LabelName    = sLabelName,
                     Barcode      = sBarcode,
-                    BatchNo      = dgvData.Rows[rowindex].Cells[11].Value.ToString(),
+                    BatchNo      = dgvData.Rows[rowIndex].Cells[11].Value.ToString(),
                     MachineInfo  = sMachineInfo
                 }
                 );
@@ -1361,18 +1384,18 @@ namespace SSBC_Mix
                 {
                     ListItem.Add(new SSBC_Data.Extend.LabelTemplate
                     {
-                        ItemName     = dgvData.Rows[rowindex].Cells[3].Value.ToString(),
-                        ColorCode    = Decimal.Parse(dgvData.Rows[rowindex].Cells[4].Value.ToString()),
-                        ColorName    = dgvData.Rows[rowindex].Cells[5].Value.ToString(),
-                        MaterialCo   = dgvData.Rows[rowindex].Cells[6].Value.ToString(),
-                        MaterialName = dgvData.Rows[rowindex].Cells[7].Value.ToString(),
+                        ItemName = dgvData.Rows[rowIndex].Cells[3].Value.ToString(),
+                        ColorCode = Decimal.Parse(dgvData.Rows[rowIndex].Cells[4].Value.ToString()),
+                        ColorName = dgvData.Rows[rowIndex].Cells[5].Value.ToString(),
+                        MaterialCo = dgvData.Rows[rowIndex].Cells[6].Value.ToString(),
+                        MaterialName = dgvData.Rows[rowIndex].Cells[7].Value.ToString(),
                         MaterialType = sMaterialType,
-                        ScaleWeight  = 0,
-                        ScaleDate    = DateTime.Parse(dgvData.Rows[rowindex].Cells[2].Value.ToString()),
-                        LabelName    = "RUNNER (CUỐNG NHỰA)",
-                        Barcode      = dgvData.Rows[rowindex].Cells[9].Value.ToString() + "-RU",
-                        BatchNo      = dgvData.Rows[rowindex].Cells[11].Value.ToString(),
-                        MachineInfo  = sMachineInfo,
+                        ScaleWeight = 0,
+                        ScaleDate = DateTime.Parse(dgvData.Rows[rowIndex].Cells[2].Value.ToString()),
+                        LabelName = "RUNNER (CUỐNG NHỰA)",
+                        Barcode = dgvData.Rows[rowIndex].Cells[9].Value.ToString() + "-RU",
+                        BatchNo = dgvData.Rows[rowIndex].Cells[11].Value.ToString(),
+                        MachineInfo = sMachineInfo,
                     }
                     );
                 }
@@ -1399,14 +1422,25 @@ namespace SSBC_Mix
                 return;
             }
 
-            if (dgvData.Rows[rowindex].Cells[columnindex].Value.ToString() == "XÓA")
+            if (dgvData.Rows[rowIndex].Cells[columnIndex].Value.ToString() == "XÓA")
             {
                 if (MessageBox.Show("Bạn có chắc muốn xóa dòng này?", "Thông Báo", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    var Para_TrackType = new SqlParameter { ParameterName = "TrackType", Value = "MIX" };
-                    var Para_Barcode = new SqlParameter { ParameterName = "Barcode", Value = dgvData.Rows[rowindex].Cells[9].Value.ToString() };
-                    lblMsg.Visible = true;
-                    lblMsg.Text = dbContext.Database.SqlQuery<string>("dbo.sp_SSBC_Delete_Trackings @TrackType,@Barcode", Para_Barcode, Para_TrackType).FirstOrDefault();
+                    try
+                    {
+                        var Para_TrackType = new SqlParameter { ParameterName = "TrackType", Value = "MIX" };
+                        var Para_Barcode = new SqlParameter { ParameterName = "Barcode", Value = dgvData.Rows[rowIndex].Cells[9].Value.ToString() };
+                        //lblMsg.Visible = true;
+                        //lblMsg.Text = dbContext.Database.SqlQuery<string>("dbo.sp_SSBC_Delete_Trackings @TrackType,@Barcode", Para_Barcode, Para_TrackType).FirstOrDefault();
+                        notifi = dbContext.Database.SqlQuery<string>("dbo.sp_SSBC_Delete_Trackings @TrackType,@Barcode", Para_Barcode, Para_TrackType).FirstOrDefault();
+                        MessageBox.Show(notifi);
+                        LOOKUPMIX();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Đã xảy ra lỗi trong quá trình xóa dữ liệu !");
+                        ex.ToString();
+                    }
                 }
 
                 return;
@@ -1441,5 +1475,26 @@ namespace SSBC_Mix
         }
 
         #endregion GhiLog
+
+        //private void btnPre_Click(object sender, EventArgs e)
+        //{
+        //    if (pageNumber-1>0)
+        //    {
+        //        pageNumber--;
+        //        dgvData.DataSource = LoadRecord(pageNumber, numRecord);
+        //    }
+        //}
+
+        //private void btnNext_Click(object sender, EventArgs e)
+        //{
+        //    int totalRecord = 0;
+        //    var dbContext   = new SSBC_Data.SourceContext();
+        //    totalRecord     = dbContext.vSSBC_WhsTracks.Count();
+        //    if (pageNumber - 1 < totalRecord / numRecord)
+        //    {
+        //        pageNumber++;
+        //        dgvData.DataSource = LoadRecord(pageNumber, numRecord);
+        //    }
+        //}
     }
 }

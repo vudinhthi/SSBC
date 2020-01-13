@@ -33,17 +33,18 @@ namespace SSBC_Data.Views
                 var Items = (from a in list
                              select new SSBC_Data.Entities.WinlineProducts
                              {
-                                 WinlineCode = a.WinlineCode,
-                                 Name = a.Name,
-                                 IsChecked = false,
-                                 AutoId = SSBC_Data.SourceContext.Action.CreateAutoID(),
+                                 WinlineCode  = a.WinlineCode,
+                                 Name         = a.Name,
+                                 IsChecked    = false,
+                                 AutoId       = SSBC_Data.SourceContext.Action.CreateAutoID(),
                                  UpdateStatus = "Unchanged"
                              }
                             );
                 return new ObservableCollection<SSBC_Data.Entities.WinlineProducts>(Items);
             }
-            catch (Exception err)
+            catch (Exception ex)
             {
+                ex.ToString();
                 return new ObservableCollection<SSBC_Data.Entities.WinlineProducts>();
             }
         }

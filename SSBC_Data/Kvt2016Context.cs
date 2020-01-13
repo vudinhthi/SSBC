@@ -61,8 +61,9 @@ namespace SSBC_Data
                     loDataTable.Rows.Add(0);
                     return Convert.ToString(loDataTable.Rows[0]["Eval"]);
                 }
-                catch (Exception err)
+                catch (Exception ex)
                 {
+                    ex.ToString();
                     return expression;
                 }
             }

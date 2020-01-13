@@ -43,8 +43,9 @@ namespace SSBC_Data.SQLext
                 var dbContext = new SSBC_Data.SourceContext();
                 return dbContext.vSSBC_MixTracks.Where(x => x.TrackNo == TrackNo).FirstOrDefault();
             }
-            catch (Exception err)
+            catch (Exception ex)
             {
+                ex.ToString();
                 return new vSSBC_MixTracks();
             }
         }

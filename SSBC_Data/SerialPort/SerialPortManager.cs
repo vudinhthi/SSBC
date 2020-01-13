@@ -29,7 +29,6 @@ namespace SerialPortListener.Serial
 
         private SerialPort _serialPort;
         private SerialSettings _currentSerialSettings = new SerialSettings();
-        private string _latestRecieved = String.Empty;
 
         public event EventHandler<SerialDataEventArgs> NewSerialDataRecieved;
 
