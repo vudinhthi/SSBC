@@ -11,7 +11,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace SSBC_Data.Mapping
 {
     public partial class SSBCCompoundTrackingsMap
-        : System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<SSBC_Data.Entities.SSBCCompoundTrackings>
+        : System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<Entities.SSBCCompoundTrackings>
     {
         public void InitializeMapping()
         {

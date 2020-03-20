@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SSBC_Mix
@@ -16,8 +9,10 @@ namespace SSBC_Mix
         {
             InitializeComponent();
         }
+
         public string Option = "";
         public string VoucherID = "";
+
         private void btnOption01_Click(object sender, EventArgs e)
         {
             try
@@ -29,18 +24,15 @@ namespace SSBC_Mix
             }
             catch (Exception err)
             {
-
             }
         }
-
-       
 
         private void btnOption02_Click(object sender, EventArgs e)
         {
             try
             {
                 Option = "Mix";
-                if(VoucherID=="" || VoucherID == "0")
+                if (VoucherID == "" || VoucherID == "0")
                 {
                     return;
                 }
@@ -49,17 +41,11 @@ namespace SSBC_Mix
             }
             catch (Exception err)
             {
-
             }
         }
 
-      
-
-       
-
         private void frmMixPopUp_Load(object sender, EventArgs e)
         {
-
         }
 
         private void btn0_Click(object sender, EventArgs e)
@@ -67,6 +53,7 @@ namespace SSBC_Mix
             VoucherID = VoucherID + "0";
             txtVoucherID.Text = VoucherID;
         }
+
         private void btn1_Click(object sender, EventArgs e)
         {
             VoucherID = VoucherID + "1";

@@ -34,20 +34,20 @@ namespace SSBC_Data.Views
             try
             {
                 var dbcontext = new SSBC_Data.SourceContext();
-                var list      = new ObservableCollection<SSBC_Data.Entities.SSBCFormula>(dbcontext.SSBCFormulas);
-                var Items     = (from a in list
+                var list = new ObservableCollection<SSBC_Data.Entities.SSBCFormula>(dbcontext.SSBCFormulas);
+                var Items = (from a in list
                              select new SSBC_Data.Entities.SSBCFormula
                              {
-                                 ColorCode      = a.ColorCode,
-                                 ColorName      = a.ColorName,
-                                 Pp             = a.Pp,
-                                 UserUpdate     = a.UserUpdate,
+                                 ColorCode = a.ColorCode,
+                                 ColorName = a.ColorName,
+                                 Pp = a.Pp,
+                                 UserUpdate = a.UserUpdate,
                                  UserUpdateTime = a.UserUpdateTime,
-                                 UserAdded      = a.UserAdded,
-                                 UserAddedTime  = a.UserAddedTime,
-                                 IsChecked      = false,
-                                 AutoId         = SSBC_Data.SourceContext.Action.CreateAutoID(),
-                                 UpdateStatus   = "Unchanged"
+                                 UserAdded = a.UserAdded,
+                                 UserAddedTime = a.UserAddedTime,
+                                 IsChecked = false,
+                                 AutoId = SSBC_Data.SourceContext.Action.CreateAutoID(),
+                                 UpdateStatus = "Unchanged"
                              }
                             );
                 return new ObservableCollection<SSBC_Data.Entities.SSBCFormula>(Items);

@@ -139,24 +139,24 @@ namespace SerialPortListener.Serial
         /// <returns>An updated list of values</returns>
         public void UpdateBaudRateCollection(int possibleBaudRates)
         {
-            const int BAUD_075    = 0x00000001;
-            const int BAUD_110    = 0x00000002;
-            const int BAUD_150    = 0x00000008;
-            const int BAUD_300    = 0x00000010;
-            const int BAUD_600    = 0x00000020;
-            const int BAUD_1200   = 0x00000040;
-            const int BAUD_1800   = 0x00000080;
-            const int BAUD_2400   = 0x00000100;
-            const int BAUD_4800   = 0x00000200;
-            const int BAUD_7200   = 0x00000400;
-            const int BAUD_9600   = 0x00000800;
-            const int BAUD_14400  = 0x00001000;
-            const int BAUD_19200  = 0x00002000;
-            const int BAUD_38400  = 0x00004000;
-            const int BAUD_56K    = 0x00008000;
-            const int BAUD_57600  = 0x00040000;
+            const int BAUD_075 = 0x00000001;
+            const int BAUD_110 = 0x00000002;
+            const int BAUD_150 = 0x00000008;
+            const int BAUD_300 = 0x00000010;
+            const int BAUD_600 = 0x00000020;
+            const int BAUD_1200 = 0x00000040;
+            const int BAUD_1800 = 0x00000080;
+            const int BAUD_2400 = 0x00000100;
+            const int BAUD_4800 = 0x00000200;
+            const int BAUD_7200 = 0x00000400;
+            const int BAUD_9600 = 0x00000800;
+            const int BAUD_14400 = 0x00001000;
+            const int BAUD_19200 = 0x00002000;
+            const int BAUD_38400 = 0x00004000;
+            const int BAUD_56K = 0x00008000;
+            const int BAUD_57600 = 0x00040000;
             const int BAUD_115200 = 0x00020000;
-            const int BAUD_128K   = 0x00010000;
+            const int BAUD_128K = 0x00010000;
 
             _baudRateCollection.Clear();
 

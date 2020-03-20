@@ -2,13 +2,10 @@
 using SerialPortListener.Serial;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data.SqlClient;
-using System.Drawing;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SSBC_Mix
@@ -20,16 +17,17 @@ namespace SSBC_Mix
             InitializeComponent();
             UserInitialization();
         }
-        #region GetWeight
-        SerialPortManager _spManager;
 
-        string _Weight = "";
+        #region GetWeight
+
+        private SerialPortManager _spManager;
+
+        private string _Weight = "";
+
         // Handles the "Start Listening"-buttom click event
         private void btnStart_Click(object sender, EventArgs e)
         {
             _spManager.StartListening();
-
-
         }
 
         // Handles the "Stop Listening"-buttom click event
@@ -52,21 +50,18 @@ namespace SSBC_Mix
             mySerialSettings.Parity = 0;
             mySerialSettings.StopBits = StopBits.One;
 
-
             _spManager.NewSerialDataRecieved += new EventHandler<SerialDataEventArgs>(_spManager_NewSerialDataRecieved);
             this.FormClosing += new FormClosingEventHandler(MainForm_FormClosing);
-
-
         }
-
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             _spManager.Dispose();
         }
 
-        string strData = "";
-        void _spManager_NewSerialDataRecieved(object sender, SerialDataEventArgs e)
+        private string strData = "";
+
+        private void _spManager_NewSerialDataRecieved(object sender, SerialDataEventArgs e)
         {
             if (this.InvokeRequired)
             {
@@ -74,8 +69,6 @@ namespace SSBC_Mix
                 this.BeginInvoke(new EventHandler<SerialDataEventArgs>(_spManager_NewSerialDataRecieved), new object[] { sender, e });
                 return;
             }
-
-
 
             // This application is connected to a GPS sending ASCCI characters, so data is converted to text
             strData = Encoding.ASCII.GetString(e.Data);
@@ -90,23 +83,17 @@ namespace SSBC_Mix
                 _Weight = _Weight + strData;
             }
 
-
             if (strData == "B" || strData == "C")
             {
                 txtWeight.Text = _Weight.Trim();
             }
-
-
         }
-        #endregion
 
-        
-
+        #endregion GetWeight
 
         private SSBC_Data.Extend.LowLevelKeyboardListener _listener;
         private ScannerInfo _ScannerInfo;
         private SSBC_Data.SourceContext dbContext;
-
 
         private void frmRedStation_Load(object sender, EventArgs e)
         {
@@ -116,8 +103,6 @@ namespace SSBC_Mix
             _listener.OnKeyPressed += _listener_OnKeyPressed;
             _listener.HookKeyboard();
 
-            
-
             //Khởi tạo
             _ScannerInfo = new ScannerInfo();
             dbContext = new SSBC_Data.SourceContext();
@@ -126,17 +111,12 @@ namespace SSBC_Mix
             //LoadDefaultData();
             //ListWinline = Data.Views.WinlineProductsItem.ItemsSource().ToList();
 
-
             ReSetControl();
             //Load Winline Product
             _spManager.StartListening();
-
         }
+
         private decimal WeightInput = 0;
-
-
-        
-
 
         private void txtBarcode_KeyDown(object sender, KeyEventArgs e)
         {
@@ -150,13 +130,11 @@ namespace SSBC_Mix
 
                 //Kiểm tra tự động chuyển
 
-
                 if (txtBarcode.Text.Length < 3)
                 {
                     lblMsg.Text = "Kiểm tra lại Barcode";
                     lblMsg.Visible = true;
                     ReSetControl();
-                    
                 }
                 else if (WeightInput == 0)
                 {
@@ -168,7 +146,6 @@ namespace SSBC_Mix
                 {
                     var Para_Barcode = new SqlParameter { ParameterName = "Barcode", Value = fBarcode };
                     var Para_ScaleWeight = new SqlParameter { ParameterName = "ScaleWeight", Value = WeightInput };
-
 
                     _ScannerInfo = dbContext.Database.SqlQuery<ScannerInfo>("dbo.sp_RedStation_GetData @Barcode,@ScaleWeight", Para_Barcode, Para_ScaleWeight).FirstOrDefault();
 
@@ -185,26 +162,23 @@ namespace SSBC_Mix
                         Print();
 
                         txtBarcode.Focus();
-
                     }
                     else
                     {
                         lblMsg.Visible = true;
                         lblMsg.Text = _ScannerInfo.Msg;
-                        
+
                         //===========
                         ReSetControl();
                     }
                 }
 
-               
                 //====
-                
+
                 // var ItemsSource = (List<SSBC_Mix.Data.SQLView.ViewStocks>)gvData.DataSource;
-
-
             }
         }
+
         private void ReSetControl()
         {
             txtBarcode.Text = "";
@@ -217,27 +191,19 @@ namespace SSBC_Mix
             txtWeight.Text = "0";
         }
 
-
-
         #region In Tem
 
-    
-
-
         #region PrintMIX
+
         private void Print()
         {
             try
             {
                 var ListItem = new List<SSBC_Data.Extend.LabelTemplate>();
 
-               
-
                 ListItem.Add(
                 new SSBC_Data.Extend.LabelTemplate
                 {
-
-                    
                     ColorCode = _ScannerInfo.ColorCode,
                     ColorName = _ScannerInfo.ColorName,
                     MaterialCo = _ScannerInfo.MaterialCo,
@@ -249,65 +215,46 @@ namespace SSBC_Mix
                     Barcode = _ScannerInfo.TrackNo
                 });
 
-
                 var MyReader = new System.Configuration.AppSettingsReader();
 
                 string Printer = "";
 
                 Printer = _ScannerInfo.MaterialType == "CP" ? MyReader.GetValue("Printer_Yellow", typeof(string)).ToString() : MyReader.GetValue("Printer_White", typeof(string)).ToString();
 
-
                 Report.rptLabelBarcode01 rep = new Report.rptLabelBarcode01();
                 rep.Load(ListItem);
                 rep.PrinterName = Printer;
                 rep.Print();
                 //rep.ShowPreview();
-
-
             }
             catch (Exception err)
             {
-
             }
         }
-        #endregion
 
+        #endregion PrintMIX
 
-    
-
-        
-
-
-
-
-        #endregion
-
-
-
-
-
+        #endregion In Tem
 
         #region Barcode Scanner
 
-        void _listener_OnKeyPressed(object sender, SSBC_Data.Extend.KeyPressedArgs e)
+        private void _listener_OnKeyPressed(object sender, SSBC_Data.Extend.KeyPressedArgs e)
         {
             //if (_FlagProcess == "Mixed-Add")
             {
                 //txtBarcode.Focus();
             }
 
-
             //if (e.KeyPressed.ToString() != "Return")
             //{ this.txtWeight.Text += e.KeyPressed.ToString(); }
-
-
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             _listener.UnHookKeyboard();
         }
-        #endregion
+
+        #endregion Barcode Scanner
 
         private void btnExit_Click(object sender, EventArgs e)
         {
@@ -316,7 +263,6 @@ namespace SSBC_Mix
 
         private void button1_Click(object sender, EventArgs e)
         {
-           
         }
     }
 }

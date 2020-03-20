@@ -40,17 +40,17 @@ namespace SSBC_Data.Views
                 var Items = (from a in list
                              select new SSBC_Data.Entities.SSBCMixVouchers
                              {
-                                 VoucherId    = a.VoucherId,
-                                 ColorCo      = a.ColorCo,
-                                 ColorName    = a.ColorName,
-                                 WinlineCo    = a.WinlineCo,
-                                 WinlineName  = a.WinlineName,
-                                 O1           = a.O1,
-                                 Do1          = a.Do1,
-                                 BatchNo      = a.BatchNo,
-                                 TotalQty     = a.TotalQty,
-                                 IsChecked    = false,
-                                 AutoId       = SSBC_Data.SourceContext.Action.CreateAutoID(),
+                                 VoucherId = a.VoucherId,
+                                 ColorCo = a.ColorCo,
+                                 ColorName = a.ColorName,
+                                 WinlineCo = a.WinlineCo,
+                                 WinlineName = a.WinlineName,
+                                 O1 = a.O1,
+                                 Do1 = a.Do1,
+                                 BatchNo = a.BatchNo,
+                                 TotalQty = a.TotalQty,
+                                 IsChecked = false,
+                                 AutoId = SSBC_Data.SourceContext.Action.CreateAutoID(),
                                  UpdateStatus = "Unchanged"
                              }
                             );
@@ -72,17 +72,17 @@ namespace SSBC_Data.Views
                 var Items = (from a in list
                              select new SSBC_Data.Entities.SSBCMixVouchers
                              {
-                                 VoucherId    = a.VoucherId,
-                                 ColorCo      = a.ColorCo,
-                                 ColorName    = a.ColorName,
-                                 WinlineCo    = a.WinlineCo,
-                                 WinlineName  = a.WinlineName,
-                                 O1           = a.O1,
-                                 Do1          = a.Do1,
-                                 BatchNo      = a.BatchNo,
-                                 TotalQty     = a.TotalQty,
-                                 IsChecked    = false,
-                                 AutoId       = SSBC_Data.SourceContext.Action.CreateAutoID(),
+                                 VoucherId = a.VoucherId,
+                                 ColorCo = a.ColorCo,
+                                 ColorName = a.ColorName,
+                                 WinlineCo = a.WinlineCo,
+                                 WinlineName = a.WinlineName,
+                                 O1 = a.O1,
+                                 Do1 = a.Do1,
+                                 BatchNo = a.BatchNo,
+                                 TotalQty = a.TotalQty,
+                                 IsChecked = false,
+                                 AutoId = SSBC_Data.SourceContext.Action.CreateAutoID(),
                                  UpdateStatus = "Unchanged"
                              }
                             );

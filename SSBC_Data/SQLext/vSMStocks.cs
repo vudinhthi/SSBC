@@ -25,8 +25,8 @@ namespace SSBC_Data.SQLext
         {
             try
             {
-                var dbContext = new SSBC_Data.SourceContext();
-               // var Total = dbContext.vSMStocks.Where(x => x.SessionID == SessionID).FirstOrDefault().Total;
+                SourceContext dbContext = new SourceContext();
+                // var Total = dbContext.vSMStocks.Where(x => x.SessionID == SessionID).FirstOrDefault().Total;
                 var Total = dbContext.vSMStocks.FirstOrDefault(x => x.SessionID == SessionID).Total;
                 return Total;
             }

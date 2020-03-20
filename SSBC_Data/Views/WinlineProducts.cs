@@ -33,10 +33,10 @@ namespace SSBC_Data.Views
                 var Items = (from a in list
                              select new SSBC_Data.Entities.WinlineProducts
                              {
-                                 WinlineCode  = a.WinlineCode,
-                                 Name         = a.Name,
-                                 IsChecked    = false,
-                                 AutoId       = SSBC_Data.SourceContext.Action.CreateAutoID(),
+                                 WinlineCode = a.WinlineCode,
+                                 Name = a.Name,
+                                 IsChecked = false,
+                                 AutoId = SSBC_Data.SourceContext.Action.CreateAutoID(),
                                  UpdateStatus = "Unchanged"
                              }
                             );

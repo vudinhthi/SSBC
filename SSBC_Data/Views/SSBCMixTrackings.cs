@@ -47,23 +47,23 @@ namespace SSBC_Data.Views
                 var Items = (from a in list
                              select new SSBC_Data.Entities.SSBCMixTrackings
                              {
-                                 TrackNo        = a.TrackNo,
-                                 Year           = a.Year,
-                                 Seq            = a.Seq,
-                                 ColorCode      = a.ColorCode,
-                                 MaterialCo     = a.MaterialCo,
-                                 MaterialType   = a.MaterialType,
-                                 ScaleWeight    = a.ScaleWeight,
-                                 ScaleDate      = a.ScaleDate,
-                                 WinlineCode    = a.WinlineCode,
-                                 ProForBacode   = a.ProForBacode,
-                                 UserUpdate     = a.UserUpdate,
+                                 TrackNo = a.TrackNo,
+                                 Year = a.Year,
+                                 Seq = a.Seq,
+                                 ColorCode = a.ColorCode,
+                                 MaterialCo = a.MaterialCo,
+                                 MaterialType = a.MaterialType,
+                                 ScaleWeight = a.ScaleWeight,
+                                 ScaleDate = a.ScaleDate,
+                                 WinlineCode = a.WinlineCode,
+                                 ProForBacode = a.ProForBacode,
+                                 UserUpdate = a.UserUpdate,
                                  UserUpdateTime = a.UserUpdateTime,
-                                 UserAdded      = a.UserAdded,
-                                 UserAddedTime  = a.UserAddedTime,
-                                 IsChecked      = false,
-                                 AutoId         = SSBC_Data.SourceContext.Action.CreateAutoID(),
-                                 UpdateStatus   = "Unchanged"
+                                 UserAdded = a.UserAdded,
+                                 UserAddedTime = a.UserAddedTime,
+                                 IsChecked = false,
+                                 AutoId = SSBC_Data.SourceContext.Action.CreateAutoID(),
+                                 UpdateStatus = "Unchanged"
                              }
                             );
                 return new ObservableCollection<SSBC_Data.Entities.SSBCMixTrackings>(Items);

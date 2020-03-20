@@ -42,20 +42,20 @@ namespace SSBC_Data.Views
                 var Items = (from a in list
                              select new SSBC_Data.Entities.SSBCMaterials
                              {
-                                 MaterialCo     = a.MaterialCo,
-                                 MaterialName   = a.MaterialName,
-                                 Unit           = a.Unit,
-                                 UserUpdate     = a.UserUpdate,
-                                 ReRe           = a.ReRe,
-                                 CpR            = a.CpR,
-                                 CpN            = a.CpN,
-                                 RESta          = a.RESta,
+                                 MaterialCo = a.MaterialCo,
+                                 MaterialName = a.MaterialName,
+                                 Unit = a.Unit,
+                                 UserUpdate = a.UserUpdate,
+                                 ReRe = a.ReRe,
+                                 CpR = a.CpR,
+                                 CpN = a.CpN,
+                                 RESta = a.RESta,
                                  UserUpdateTime = a.UserUpdateTime,
-                                 UserAdded      = a.UserAdded,
-                                 UserAddedTime  = a.UserAddedTime,
-                                 IsChecked      = false,
-                                 AutoId         = SSBC_Data.SourceContext.Action.CreateAutoID(),
-                                 UpdateStatus   = "Unchanged"
+                                 UserAdded = a.UserAdded,
+                                 UserAddedTime = a.UserAddedTime,
+                                 IsChecked = false,
+                                 AutoId = SSBC_Data.SourceContext.Action.CreateAutoID(),
+                                 UpdateStatus = "Unchanged"
                              }
                             );
                 return new ObservableCollection<SSBC_Data.Entities.SSBCMaterials>(Items);

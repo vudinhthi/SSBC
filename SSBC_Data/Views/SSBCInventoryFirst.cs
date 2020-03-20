@@ -42,20 +42,20 @@ namespace SSBC_Data.Views
                 var Items = (from a in list
                              select new SSBC_Data.Entities.SSBCInventoryFirst
                              {
-                                 MaterialCo     = a.MaterialCo,
-                                 MaterialName   = a.MaterialName,
-                                 ColorCode      = a.ColorCode,
-                                 ColorName      = a.ColorName,
-                                 Unit           = a.Unit,
-                                 UserUpdate     = a.UserUpdate,
-                                 MaterialType   = a.MaterialType,
-                                 Qty            = a.Qty,
+                                 MaterialCo = a.MaterialCo,
+                                 MaterialName = a.MaterialName,
+                                 ColorCode = a.ColorCode,
+                                 ColorName = a.ColorName,
+                                 Unit = a.Unit,
+                                 UserUpdate = a.UserUpdate,
+                                 MaterialType = a.MaterialType,
+                                 Qty = a.Qty,
                                  UserUpdateTime = a.UserUpdateTime,
-                                 UserAdded      = a.UserAdded,
-                                 UserAddedTime  = a.UserAddedTime,
-                                 IsChecked      = false,
-                                 AutoId         = SSBC_Data.SourceContext.Action.CreateAutoID(),
-                                 UpdateStatus   = "Unchanged"
+                                 UserAdded = a.UserAdded,
+                                 UserAddedTime = a.UserAddedTime,
+                                 IsChecked = false,
+                                 AutoId = SSBC_Data.SourceContext.Action.CreateAutoID(),
+                                 UpdateStatus = "Unchanged"
                              }
                             );
                 return new ObservableCollection<SSBC_Data.Entities.SSBCInventoryFirst>(Items);

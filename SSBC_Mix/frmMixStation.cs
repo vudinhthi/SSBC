@@ -118,31 +118,34 @@ namespace SSBC_Mix
         private ScannerInfo _ScannerInfo;
         private SSBC_Data.SourceContext dbContext;
         private string TrackType = string.Empty;
+
         //Grid
-        private int rowIndex     = 0;
-        private int columnIndex  = 0;
+        private int rowIndex = 0;
+
+        private int columnIndex = 0;
 
         private decimal WeightInput = 0;
-        private int VoucherAfter    = 0;
-        private int SleepTime       = 0;
+        private int VoucherAfter = 0;
+        private int SleepTime = 0;
 
         private string notifi = string.Empty;
 
         #region Pagging
-        int pageNumber              = 1;
-        int numRecord               = 15;
 
-        List<vSSBC_MixTracks> LoadRecord(int page, int recordNum)
+        private int pageNumber = 1;
+        private int numRecord = 15;
+
+        private List<vSSBC_MixTracks> LoadRecord(int page, int recordNum)
         {
             List<vSSBC_MixTracks> result = new List<vSSBC_MixTracks>();
             //Skip
-            result = dbContext.vSSBC_MixTracks.OrderByDescending(x => x.ScaleDate).Skip(page* recordNum).Take(numRecord).ToList();
+            result = dbContext.vSSBC_MixTracks.OrderByDescending(x => x.ScaleDate).Skip(page * recordNum).Take(numRecord).ToList();
             //Take
 
             return result;
         }
-        #endregion
 
+        #endregion Pagging
 
         /// <summary>
         /// frmMixStation_Load
@@ -215,8 +218,6 @@ namespace SSBC_Mix
         {
             _listener.UnHookKeyboard();
         }
-
-        
 
         /// <summary>
         /// txtBarcode_KeyDown
@@ -369,13 +370,13 @@ namespace SSBC_Mix
             //txtTrackNo.Text      = string.Empty;
             // txtWinlineCode.Text = string.Empty;
 
-            txtBarcode.Text   = string.Empty;
-            txtItemName.Text  = string.Empty;
+            txtBarcode.Text = string.Empty;
+            txtItemName.Text = string.Empty;
             txtColorCode.Text = string.Empty;
-            txtColor.Text     = string.Empty;
-            txtMatCode.Text   = string.Empty;
-            txtMatName.Text   = string.Empty;
-            txtWeight.Text    = 0.ToString();
+            txtColor.Text = string.Empty;
+            txtMatCode.Text = string.Empty;
+            txtMatName.Text = string.Empty;
+            txtWeight.Text = 0.ToString();
         }
 
         private SSBC_Data.Extend.LabelTemplate MixLabel(string _LabelName, string _Barcode, decimal _ScaleWeight)
@@ -405,8 +406,15 @@ namespace SSBC_Mix
         /// <param name="e"></param>
         private void frmMixStation_FormClosing(object sender, FormClosingEventArgs e)
         {
-            MessageBox.Show("Đóng Phần Mềm Mix");
-            WriteLog("Đóng Phần Mềm Mix");
+            if (MessageBox.Show("Are you sure you want to exit?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+            {
+                e.Cancel = true;
+            }
+            else
+            {
+                e.Cancel = false;
+                WriteLog("Đóng Phần Mềm Mix");
+            }
         }
 
         #region Button Click
@@ -1306,10 +1314,10 @@ namespace SSBC_Mix
             lblStatus.Text = "TRỘN NHỰA";
             //tabControl1.SelectedTab = TabPageInput;
 
-            string sLabelName    = string.Empty,
-                   sBarcode      = string.Empty,
+            string sLabelName = string.Empty,
+                   sBarcode = string.Empty,
                    sMaterialType = string.Empty,
-                   sMachineInfo  = string.Empty;
+                   sMachineInfo = string.Empty;
 
             rowIndex = dgvData.CurrentCell.RowIndex;
             columnIndex = dgvData.CurrentCell.ColumnIndex;
@@ -1365,18 +1373,18 @@ namespace SSBC_Mix
 
                 ListItem.Add(new SSBC_Data.Extend.LabelTemplate
                 {
-                    ItemName     = dgvData.Rows[rowIndex].Cells[3].Value.ToString(),
-                    ColorCode    = Decimal.Parse(dgvData.Rows[rowIndex].Cells[4].Value.ToString()),
-                    ColorName    = dgvData.Rows[rowIndex].Cells[5].Value.ToString(),
-                    MaterialCo   = dgvData.Rows[rowIndex].Cells[6].Value.ToString(),
+                    ItemName = dgvData.Rows[rowIndex].Cells[3].Value.ToString(),
+                    ColorCode = Decimal.Parse(dgvData.Rows[rowIndex].Cells[4].Value.ToString()),
+                    ColorName = dgvData.Rows[rowIndex].Cells[5].Value.ToString(),
+                    MaterialCo = dgvData.Rows[rowIndex].Cells[6].Value.ToString(),
                     MaterialName = dgvData.Rows[rowIndex].Cells[7].Value.ToString(),
                     MaterialType = sMaterialType,
-                    ScaleWeight  = decimal.Parse(dgvData.Rows[rowIndex].Cells[8].Value.ToString()),
-                    ScaleDate    = DateTime.Parse(dgvData.Rows[rowIndex].Cells[2].Value.ToString()),
-                    LabelName    = sLabelName,
-                    Barcode      = sBarcode,
-                    BatchNo      = dgvData.Rows[rowIndex].Cells[11].Value.ToString(),
-                    MachineInfo  = sMachineInfo
+                    ScaleWeight = decimal.Parse(dgvData.Rows[rowIndex].Cells[8].Value.ToString()),
+                    ScaleDate = DateTime.Parse(dgvData.Rows[rowIndex].Cells[2].Value.ToString()),
+                    LabelName = sLabelName,
+                    Barcode = sBarcode,
+                    BatchNo = dgvData.Rows[rowIndex].Cells[11].Value.ToString(),
+                    MachineInfo = sMachineInfo
                 }
                 );
 
@@ -1400,11 +1408,11 @@ namespace SSBC_Mix
                     );
                 }
 
-                Label         = null;
-                sLabelName    = null;
-                sBarcode      = null;
+                Label = null;
+                sLabelName = null;
+                sBarcode = null;
                 sMaterialType = null;
-                sMachineInfo  = null;
+                sMachineInfo = null;
 
                 var MyReader = new System.Configuration.AppSettingsReader();
                 string Printer = string.Empty;

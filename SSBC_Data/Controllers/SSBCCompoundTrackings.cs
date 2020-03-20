@@ -14,12 +14,12 @@ namespace SSBC_Data.Controllers
 {
     public static partial class SSBCCompoundTrackings
     {
-        public static SSBC_Data.SourceContext.MSG Save(SSBC_Data.Entities.SSBCCompoundTrackings item, string Symbol)
+        public static SourceContext.MSG Save(Entities.SSBCCompoundTrackings item, string Symbol)
         {
-            var _return = new SSBC_Data.SourceContext.MSG();
+            var _return = new SourceContext.MSG();
             try
             {
-                using (var dbContext = new SSBC_Data.SourceContext())
+                using (var dbContext = new SourceContext())
                 {
                     //check the ObjectState property and mark appropriate EntityState
                     if (item.UpdateStatus == "Added")
@@ -71,13 +71,13 @@ namespace SSBC_Data.Controllers
                     if (_return.IsError != true)
                     {
                         dbContext.SaveChanges();
-                        _return = new SSBC_Data.SourceContext.MSG(item.UpdateStatus, false);
+                        _return = new SourceContext.MSG(item.UpdateStatus, false);
                     }
                 }
             }
             catch (Exception err)
             {
-                _return = new SSBC_Data.SourceContext.MSG(item.UpdateStatus, true);
+                _return = new SourceContext.MSG(item.UpdateStatus, true);
                 _return.MsgInformation += "\n " + err.ToString();
             }
             return _return;
@@ -87,23 +87,23 @@ namespace SSBC_Data.Controllers
 
         #region Delete
 
-        public static SSBC_Data.SourceContext.MSG Delete(IEnumerable<SSBC_Data.Entities.SSBCCompoundTrackings> items)
+        public static SourceContext.MSG Delete(IEnumerable<Entities.SSBCCompoundTrackings> items)
         {
-            var _return = new SSBC_Data.SourceContext.MSG();
+            var _return = new SourceContext.MSG();
             try
             {
-                var dbContext = new SSBC_Data.SourceContext();
+                var dbContext = new SourceContext();
                 foreach (var item in items)
                 {
                     var itemDel = dbContext.SSBCCompoundTrackings.Where(s => s.TrackNo == item.TrackNo).FirstOrDefault();
                     dbContext.Entry(itemDel).State = System.Data.Entity.EntityState.Deleted;
                 };
                 dbContext.SaveChanges();
-                _return = new SSBC_Data.SourceContext.MSG("Deleted", false);
+                _return = new SourceContext.MSG("Deleted", false);
             }
             catch (Exception err)
             {
-                _return = new SSBC_Data.SourceContext.MSG("Deleted", true);
+                _return = new SourceContext.MSG("Deleted", true);
                 _return.MsgInformation += "\n " + err.ToString();
             }
 

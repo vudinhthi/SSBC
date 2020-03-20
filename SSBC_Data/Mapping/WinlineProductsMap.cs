@@ -10,7 +10,7 @@
 namespace SSBC_Data.Mapping
 {
     public partial class WinlineProductsMap
-        : System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<SSBC_Data.Entities.WinlineProducts>
+        : System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<Entities.WinlineProducts>
     {
         public void InitializeMapping()
         {

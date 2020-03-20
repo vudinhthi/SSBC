@@ -63,6 +63,8 @@
     <Compile Include="Controllers\SSBCRedTrackings.cs" />
     <Compile Include="Controllers\SSBCWHSTrackings.cs" />
     <Compile Include="Controllers\WinlineProducts.cs" />
+    <Compile Include="DAO\LoadData.cs" />
+    <Compile Include="DataProvider.cs" />
     <Compile Include="DbColorScaleSystemContext.Generated.cs" />
     <Compile Include="EntitiesObject.cs" />
     <Compile Include="Entities\SSBCCompoundTrackings.cs" />

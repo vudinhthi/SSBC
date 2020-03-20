@@ -94,6 +94,12 @@
     <Compile Include="frmExportData.Designer.cs">
       <DependentUpon>frmExportData.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmMixingRoom.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmMixingRoom.Designer.cs">
+      <DependentUpon>frmMixingRoom.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmOverWeightConfirm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -166,6 +172,9 @@
     <EmbeddedResource Include="frmExportData.resx">
       <DependentUpon>frmExportData.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmMixingRoom.resx">
+      <DependentUpon>frmMixingRoom.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmOverWeightConfirm.resx">
       <DependentUpon>frmOverWeightConfirm.cs</DependentUpon>
     </EmbeddedResource>
@@ -207,6 +216,9 @@
     <EmbeddedResource Include="XtraReport1.resx">
       <DependentUpon>XtraReport1.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

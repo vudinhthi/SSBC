@@ -10,8 +10,8 @@ namespace SSBC_Data.Extend
     public class LowLevelKeyboardListener
     {
         private const int WH_KEYBOARD_LL = 13;
-        private const int WM_KEYDOWN     = 0x0100;
-        private const int WM_SYSKEYDOWN  = 0x0104;
+        private const int WM_KEYDOWN = 0x0100;
+        private const int WM_SYSKEYDOWN = 0x0104;
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr SetWindowsHookEx(int idHook, LowLevelKeyboardProc lpfn, IntPtr hMod, uint dwThreadId);
@@ -50,7 +50,7 @@ namespace SSBC_Data.Extend
 
         private IntPtr SetHook(LowLevelKeyboardProc proc)
         {
-            using (Process curProcess      = Process.GetCurrentProcess())
+            using (Process curProcess = Process.GetCurrentProcess())
             using (ProcessModule curModule = curProcess.MainModule)
             {
                 return SetWindowsHookEx(WH_KEYBOARD_LL, proc, GetModuleHandle(curModule.ModuleName), 0);

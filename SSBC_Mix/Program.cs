@@ -5,6 +5,14 @@ namespace SSBC_Mix
 {
     internal static class Program
     {
+        //[STAThread]
+        //private static void Main()
+        //{
+        //    Application.EnableVisualStyles();
+        //    Application.SetCompatibleTextRenderingDefault(false);
+        //    Application.Run(new cbRecyclingLotNo());
+        //}
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -24,37 +32,43 @@ namespace SSBC_Mix
             switch (KeyStation)
             {
                 case "MI":
-                    var frm  = new frmMixStation();
+                    var frm = new frmMixStation();
                     frm.Text = "MIXED";
                     Application.Run(frm);
                     break;
 
+                //case "MI":
+                //    var frm  = new frmMixStation();
+                //    frm.Text = "MIXED";
+                //    Application.Run(frm);
+                //    break;
+
                 case "CR":
-                    var frmCR  = new frmCrushStation();
+                    var frmCR = new frmCrushStation();
                     frmCR.Text = "CRUSH";
                     Application.Run(frmCR);
                     break;
 
                 case "CP":
-                    var frmCP  = new frmCPStation();
+                    var frmCP = new frmCPStation();
                     frmCP.Text = "COMPOUND";
                     Application.Run(frmCP);
                     break;
 
                 case "RE":
-                    var frmRE  = new frmRedStation();
+                    var frmRE = new frmRedStation();
                     frmRE.Text = "COMPOUND";
                     Application.Run(frmRE);
                     break;
 
                 case "COPY":
-                    var frmCOPY  = new frmCopyStation();
+                    var frmCOPY = new frmCopyStation();
                     frmCOPY.Text = "COPY";
                     Application.Run(frmCOPY);
                     break;
 
                 case "DATA":
-                    var frmData  = new frmExportData();
+                    var frmData = new frmExportData();
                     frmData.Text = "COPY";
                     Application.Run(frmData);
                     break;

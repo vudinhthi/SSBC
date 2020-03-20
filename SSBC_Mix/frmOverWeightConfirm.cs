@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SSBC_Mix
@@ -16,8 +9,10 @@ namespace SSBC_Mix
         {
             InitializeComponent();
         }
+
         public string Option = "";
         public string VoucherID = "";
+
         private void btnOption01_Click(object sender, EventArgs e)
         {
             try
@@ -29,18 +24,15 @@ namespace SSBC_Mix
             }
             catch (Exception err)
             {
-
             }
         }
-
-       
 
         private void btnOption02_Click(object sender, EventArgs e)
         {
             try
             {
                 Option = "Mix";
-                if(VoucherID=="" || VoucherID == "0")
+                if (VoucherID == "" || VoucherID == "0")
                 {
                     return;
                 }
@@ -49,13 +41,8 @@ namespace SSBC_Mix
             }
             catch (Exception err)
             {
-
             }
         }
-
-      
-
-       
 
         private void frmOverWeightConfirm_Load(object sender, EventArgs e)
         {
@@ -73,20 +60,20 @@ namespace SSBC_Mix
             }
             catch (Exception err)
             {
-
             }
         }
 
         public string Reason = "";
+
         private void btnConfirm_Click(object sender, EventArgs e)
         {
             try
             {
                 Option = "Yes";
 
-                if(chkOption01.Checked==true)
+                if (chkOption01.Checked == true)
                 {
-                    Reason += chkOption01.Text+",";
+                    Reason += chkOption01.Text + ",";
                 }
 
                 if (chkOption02.Checked == true)
@@ -104,7 +91,6 @@ namespace SSBC_Mix
             }
             catch (Exception err)
             {
-
             }
         }
 
@@ -115,7 +101,7 @@ namespace SSBC_Mix
 
         private void chkOption01_CheckedChanged(object sender, EventArgs e)
         {
-            if(chkOption01.Checked==true || chkOption02.Checked==true)
+            if (chkOption01.Checked == true || chkOption02.Checked == true)
             {
                 chkOption03.Checked = false;
             }

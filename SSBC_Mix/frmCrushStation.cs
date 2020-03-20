@@ -398,9 +398,6 @@ namespace SSBC_Mix
             try
             {
                 var ListItem = new List<SSBC_Data.Extend.LabelTemplate>();
-
-
-
                 ListItem.Add(
                 new SSBC_Data.Extend.LabelTemplate
                 {
